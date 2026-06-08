@@ -1,0 +1,53 @@
+---
+title: Authentication
+description: Authenticate API requests with Vercel tokens and OAuth for secure access control.
+---
+
+## Overview
+
+Vercel API requests require authentication via personal access tokens or OAuth 2.0. Every request must include a valid token in the `Authorization` header. Tokens grant access based on assigned scopes that control which resources the caller can read or modify.
+
+## Authentication Methods
+
+<Tabs>
+  <Tab title="Personal Access Tokens" icon="key">
+    Generate a personal access token from your account settings. These tokens authenticate as your user account and inherit your permissions.
+
+    <ParamField header="Authorization" param-type="string" required="true">
+      Set the value to `Bearer ` followed by your token.
+    </ParamField>
+  </Tab>
+  <Tab title="OAuth Apps" icon="shield">
+    Register an OAuth application to obtain client credentials. Users authorize your app and receive short-lived access tokens.
+  </Tab>
+</Tabs>
+
+## Implementation
+
+Use the token in requests across supported languages.
+
+<CodeGroup tabs="JavaScript,Python,cURL">
+```javascript
+const res = await fetch('https://api.example.com/v1/deployments', {
+  headers: {
+    Authorization: 'Bearer YOUR_TOKEN',
+  },
+});
+```
+```python
+import requests
+
+headers = {'Authorization': 'Bearer YOUR_TOKEN'}
+response = requests.get('https://api.example.com/v1/deployments', headers=headers)
+```
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  https://api.example.com/v1/deployments
+```
+</CodeGroup>
+
+## Security Considerations
+
+<Callout kind="alert">
+Rotate tokens every 90 days. Store tokens only in secure environment variables and never commit them to source control. Revoke compromised tokens immediately from your account dashboard.
+</Callout>

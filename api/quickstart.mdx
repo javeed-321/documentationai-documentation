@@ -1,0 +1,79 @@
+---
+title: Quickstart
+description: Make your first API calls to create deployments and retrieve project data on Vercel.
+---
+
+## Prerequisites
+
+<Callout kind="info">
+Obtain a personal access token from your account settings page. Export it as the `VERCEL_TOKEN` environment variable before running any requests.
+</Callout>
+
+## Installation
+
+<Steps>
+<Step title="Install the client" icon="download">
+Run the following command to add the official client package.
+
+```bash
+npm install @vercel/client
+```
+</Step>
+<Step title="Authenticate" icon="key">
+Store your token so the client can read it automatically.
+
+```bash
+export VERCEL_TOKEN=your_token_here
+```
+</Step>
+</Steps>
+
+## Create a deployment
+
+Use the client to push a new deployment from a local directory.
+
+<CodeGroup tabs="JavaScript,cURL">
+```javascript
+import { createDeployment } from '@vercel/client';
+
+const deployment = await createDeployment({
+  token: process.env.VERCEL_TOKEN,
+  path: './my-app',
+  projectName: 'example-project',
+});
+
+console.log(deployment.id);
+```
+
+```bash
+curl -X POST https://api.example.com/v2/deployments \
+  -H "Authorization: Bearer $VERCEL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"example-project","files":[]}'
+```
+</CodeGroup>
+
+## List projects
+
+Retrieve all projects associated with your account.
+
+```javascript
+const res = await fetch('https://api.example.com/v2/projects', {
+  headers: { Authorization: `Bearer ${process.env.VERCEL_TOKEN}` },
+});
+const { projects } = await res.json();
+console.log(projects);
+```
+
+## Handle responses
+
+Every successful response returns a JSON object with an `id` field. Check the `status` field on error responses to determine the next action.
+
+<Columns cols={2}>
+<Card title="Deployments reference" href="#creating-a-deployment" icon="arrow-right">
+View all deployment endpoints and options.
+</Card>
+<Card title="Projects reference" href="#list-projects" icon="arrow-right">
+See every available project operation.
+</Card>
+</Columns>

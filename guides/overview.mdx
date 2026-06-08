@@ -1,0 +1,71 @@
+---
+title: Feature Overview
+description: Explore Vercel's core capabilities including previews, analytics, and edge middleware.
+---
+
+## Overview
+
+Vercel provides a modern deployment platform that helps you ship web applications quickly. You connect your Git repository, and Vercel handles builds, deployments, and hosting automatically. The platform emphasizes instant feedback through previews, detailed performance insights, and efficient execution at the edge.
+
+## Instant Previews
+
+Every push to your repository triggers a unique preview deployment. You share the preview URL with stakeholders to gather feedback before merging changes.
+
+<Card title="Preview Workflow" icon="git-branch" href="#examples">
+  View live changes without affecting production.
+</Card>
+
+## Performance Monitoring
+
+Vercel tracks Core Web Vitals and other metrics on every deployment. You review dashboards to identify slow resources and optimize load times.
+
+<Callout kind="info">
+  Analytics data updates in real time after each deployment.
+</Callout>
+
+## Edge Functions
+
+Edge Functions run lightweight JavaScript close to users worldwide. You deploy functions that execute in milliseconds without managing servers.
+
+<Tabs>
+  <Tab title="JavaScript" icon="code">
+    ```javascript
+    export default function handler(request) {
+      return new Response("Hello from the edge");
+    }
+    ```
+  </Tab>
+  <Tab title="TypeScript" icon="code">
+    ```typescript
+    export default function handler(request: Request) {
+      return new Response("Hello from the edge");
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Team Collaboration
+
+Invite teammates to shared projects with role-based permissions. You comment directly on preview deployments and assign tasks through integrated notifications.
+
+## Examples
+
+<CodeGroup tabs="CLI,API">
+```bash
+vercel deploy --prod
+```
+```bash
+curl -X POST https://api.example.com/v1/deployments \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+</CodeGroup>
+
+## Best Practices
+
+<Expandable title="Optimize Edge Functions" default-open="false">
+  Keep function code under 1 MB and minimize external dependencies for fastest cold starts.
+</Expandable>
+
+<Expandable title="Review Analytics Regularly" default-open="false">
+  Set weekly reminders to check performance reports and address regressions early.
+</Expandable>

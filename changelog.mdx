@@ -1,22 +1,44 @@
 ---
-title: Sample Changelog
-description: Sample release notes you can replace with your real updates.
+title: Changelog
+description: Track the latest updates and improvements to the Vercel platform.
 ---
 
-## Sample updates
+<Update label="2024-10-20" description="v4.2.1" tags={["feature", "bugfix"]}>
 
-<Callout kind="alert">
-This changelog is example content. Replace every entry with your real releases.
-</Callout>
+## New Features
 
-<Update label="2026-01-26" description="Sample Update" tags={["sample"]}>
-## What changed
-- Cleaned up placeholder copy across the starter kit.
-- Added clearer "sample" messaging to avoid confusion.
+- Added support for edge middleware in serverless functions.
+- Introduced automatic preview URLs for all pull requests.
+
+## Bug Fixes
+
+- Resolved deployment timeouts on large monorepos.
+- Fixed cache invalidation for static assets.
+
 </Update>
 
-<Update label="2025-12-10" description="Sample Update" tags={["sample"]}>
-## What changed
-- Simplified the Quickstart steps.
-- Trimmed Help Center examples.
+<Update label="2024-09-15" description="v4.2.0" tags={["feature", "performance"]}>
+
+## New Features
+
+- Launched build analytics dashboard.
+- Enabled custom domain verification via DNS API.
+
+## Performance Updates
+
+- Reduced average build time by 25 percent.
+- Optimized cold starts for function invocations.
+
+</Update>
+
+<Update label="2024-08-05" description="v4.1.0" tags={["breaking", "bugfix"]}>
+
+## Breaking Changes
+
+- Deprecated legacy build configuration format.
+
+## Bug Fixes
+
+- Corrected environment variable injection during builds.
+
 </Update>
