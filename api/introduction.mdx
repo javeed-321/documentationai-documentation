@@ -1,42 +1,37 @@
 ---
-title: Introduction
-description: >-
-  Using the Vercel API  to manage projects, deployments, and domains
-  programmatically.
+title: API Introduction
+description: Introduction to the ShopifyMax API for building integrations with fast checkouts and large product sets.
 ---
-<Image src="https://blob-cdn.documentation.ai/org-2ebb2ef5-dd91-493f-9938-283fbdb14c81/doc-d2a73d2e-4391-4446-a5c8-2d0b41b7c4c1/1774416420393-s9t4cno1w99-Image-8.png?q=85&fm=auto&auto=compress%2Cformat" width="800" height="400" alt="Vercel documentation" />
+
+<Image src="https://blob-cdn.documentation.ai/org-2ebb2ef5-dd91-493f-9938-283fbdb14c81/doc-d2a73d2e-4391-4446-a5c8-2d0b41b7c4c1/1774416384221-0wlxa0j3sb2i-Image-5.png?q=85&fm=auto&auto=compress%2Cformat" alt="ShopifyMax documentation" width="800" height="400" />
 
 ## Welcome
 
-The Vercel API exposes endpoints for managing projects, deployments, and domains. Use it to automate infrastructure tasks without the dashboard.
+The ShopifyMax API provides endpoints for product catalogs and checkout flows. Integrate to support catalogs exceeding 100000 products and checkouts under three seconds.
 
-<Columns cols="2">
-  <Card title="REST API Endpoints" href="#endpoints" icon="code" horizontal="false">
-    Access all resources through standard HTTP methods and JSON responses.
+<Columns cols={2}>
+  <Card title="Endpoints" icon="code" href="#endpoints">
+    Access core endpoints for catalog queries and order processing.
   </Card>
-
-  <Card title="Project Management" href="#projects" icon="folder" horizontal="false">
-    Create, update, and delete projects and their configuration settings.
+  <Card title="Product API" icon="database" href="#product-api">
+    Manage catalogs with support for over 100000 products.
   </Card>
-
-  <Card title="Deployment Automation" href="#deployments" icon="rocket" horizontal="false">
-    Trigger and monitor deployments from external CI systems.
+  <Card title="Checkout" icon="credit-card" href="#checkout">
+    Build integrations for checkouts completing in under three seconds.
   </Card>
-
-  <Card title="Domain Configuration" href="#domains" icon="globe" horizontal="false">
-    Add, verify, and manage custom domains attached to projects.
+  <Card title="Variables" icon="settings" href="#variables">
+    Use `CART_TOKEN` and `PAYMENT_KEY` for secure substitutions.
   </Card>
 </Columns>
 
-<Card title="Projects" href="/api/projects" icon="folder" cta="View reference">
-  Full CRUD operations for project resources.
+<Card title="Product catalog reference" icon="book-open" href="#product-and-catalog-apis" horizontal>
+  Review full catalog endpoints and schemas.
 </Card>
 
-<Card title="Deployments" href="/api/deployments" icon="rocket" cta="View reference">
-  Create and inspect deployment records.
+<Card title="Checkout integration guide" icon="external-link" href="#checkout-integration" horizontal>
+  Implement fast checkout flows with variable handling.
 </Card>
 
-<Callout kind="tip" collapsed="false">
-  Authenticate every request with a Bearer token generated from your account settings.
+<Callout kind="tip">
+  Start with the product endpoints to validate catalog scale before adding checkout logic.
 </Callout>
-

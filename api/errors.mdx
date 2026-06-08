@@ -1,114 +1,135 @@
 ---
 title: Error Codes
-description: Understand common Vercel API error responses and how to resolve deployment issues.
+description: Resolve common ShopifyMax API errors related to checkout failures, cart tokens, and payment keys.
 ---
 
-## Common API Errors
+## Overview
 
-Vercel returns standard HTTP status codes with JSON error bodies. Each error includes a `code` and `message` field. Review the examples below to diagnose issues during API calls and deployments.
-
-<Expandable title="429 Too Many Requests" default-open="false">
-**Problem**
-
-```json
-{
-  "error": {
-    "code": "rate_limit_exceeded",
-    "message": "Rate limit exceeded. Try again in 45 seconds."
-  }
-}
-```
-
-**Cause**
-
-The API token exceeded 100 requests per minute.
-
-**Fix**
-
-Add exponential backoff to your client. Example:
-
-```javascript
-async function fetchWithRetry(url, options, retries = 3) {
-  const res = await fetch(url, options);
-  if (res.status === 429 && retries > 0) {
-    const wait = Math.pow(2, 3 - retries) * 1000;
-    await new Promise(r => setTimeout(r, wait));
-    return fetchWithRetry(url, options, retries - 1);
-  }
-  return res;
-}
-```
-</Expandable>
-
-<Expandable title="Build Failed" default-open="false">
-**Problem**
-
-```json
-{
-  "error": {
-    "code": "build_failed",
-    "message": "Command \"npm run build\" exited with 1"
-  }
-}
-```
-
-**Cause**
-
-A build step failed due to a missing dependency or syntax error in source code.
-
-**Fix**
-
-Run the build locally with `vercel build` to reproduce, then inspect the `vercel-output` directory for logs. Fix the failing command and redeploy.
-</Expandable>
-
-<Expandable title="Invalid Configuration" default-open="false">
-**Problem**
-
-```json
-{
-  "error": {
-    "code": "invalid_config",
-    "message": "vercel.json: unknown property \"buildCommand\""
-  }
-}
-```
-
-**Cause**
-
-The `vercel.json` file contains an unsupported key or incorrect value type.
-
-**Fix**
-
-Validate your configuration against the current schema. Replace the invalid key:
-
-```json
-{
-  "buildCommand": "npm run build"
-}
-```
-</Expandable>
-
-<Expandable title="Permission Denied" default-open="false">
-**Problem**
-
-```json
-{
-  "error": {
-    "code": "forbidden",
-    "message": "Insufficient permissions to access project"
-  }
-}
-```
-
-**Cause**
-
-The API token lacks the required scope for the requested project or team.
-
-**Fix**
-
-Regenerate the token at `https://vercel.com/account/tokens` with at least `Project:Read` and `Deployment:Write` scopes, then update your `Authorization` header.
-</Expandable>
+ShopifyMax returns structured error responses for checkout operations. Every error includes a `code` field and a `message` that references the affected `{CART_TOKEN}` or `{PAYMENT_KEY}`.
 
 <Callout kind="info">
-Always include the request ID from response headers when contacting support.
+Include the exact `{CART_TOKEN}` value from the failing request when contacting support.
 </Callout>
+
+## Checkout Decline Codes
+
+<Expandable title="Error: CHECKOUT_DECLINED" default-open="false">
+
+**Problem**
+
+```json
+{
+  "error": "CHECKOUT_DECLINED",
+  "message": "Checkout declined for cart token cart_9k2pL4mX"
+}
+```
+
+**Cause**
+
+The payment processor rejected the transaction after the cart contained more than 100000 products or the total exceeded the merchant limit.
+
+**Fix**
+
+Split the cart into smaller batches under 50000 products each and retry with the same `{CART_TOKEN}`.
+
+```bash
+curl -X POST https://api.example.com/v1/checkout \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{"cart_token":"cart_9k2pL4mX","split":true}'
+```
+
+</Expandable>
+
+<Expandable title="Error: CHECKOUT_TIMEOUT" default-open="false">
+
+**Problem**
+
+```json
+{
+  "error": "CHECKOUT_TIMEOUT",
+  "message": "Checkout exceeded 3s limit"
+}
+```
+
+**Cause**
+
+Network latency or an oversized payload prevented completion within the required window.
+
+**Fix**
+
+Reduce payload size and ensure the request originates from a region with sub-100 ms latency to `api.example.com`.
+
+</Expandable>
+
+## CART_TOKEN Errors
+
+<Expandable title="Error: INVALID_CART_TOKEN" default-open="false">
+
+**Problem**
+
+```json
+{
+  "error": "INVALID_CART_TOKEN",
+  "message": "cart_9k2pL4mX is expired or malformed"
+}
+```
+
+**Cause**
+
+The token was generated more than 30 minutes ago or contains invalid characters.
+
+**Fix**
+
+Generate a fresh token and re-add items before attempting checkout again.
+
+```javascript
+const token = await shopifyMax.carts.create();
+```
+
+</Expandable>
+
+## PAYMENT_KEY Failures
+
+<Expandable title="Error: INVALID_PAYMENT_KEY" default-open="false">
+
+**Problem**
+
+```json
+{
+  "error": "INVALID_PAYMENT_KEY",
+  "message": "Payment key pk_live_abc123 rejected"
+}
+```
+
+**Cause**
+
+The `{PAYMENT_KEY}` is either revoked, scoped to the wrong merchant, or used after its 24-hour rotation window.
+
+**Fix**
+
+Rotate the key in the dashboard and update the environment variable before the next request.
+
+</Expandable>
+
+## Rate Limit Handling
+
+<Expandable title="Error: RATE_LIMIT_EXCEEDED" default-open="false">
+
+**Problem**
+
+HTTP 429 response with header `Retry-After: 60`.
+
+**Cause**
+
+More than 1000 requests per minute were sent using the same `{CART_TOKEN}`.
+
+**Fix**
+
+Implement exponential backoff starting at 1 second and respect the `Retry-After` value.
+
+```python
+import time
+time.sleep(int(response.headers["Retry-After"]))
+```
+
+</Expandable>

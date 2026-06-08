@@ -1,58 +1,72 @@
 ---
-title: Quickstart
-description: Deploy your first project to Vercel in minutes using Git integration or CLI.
+title: Quickstart Guide
+description: Set up ShopifyMax and launch your first high-volume store with optimized checkout in minutes.
 ---
 
 ## Prerequisites
 
 <Callout kind="info">
-You need a Git provider account (GitHub, GitLab, or Bitbucket) and a Vercel account. Create a repository with a supported framework such as Next.js, React, or Vue.
+Before you begin, create a free account at `https://dashboard.example.com` and obtain your store API key. You need Node.js 18 or later installed.
 </Callout>
 
-## Connect Your Repository
+## Create Your Store
 
 <Steps>
-<Step title="Import the project" icon="download">
-Open the Vercel dashboard and select Import Git Repository. Choose your repository from the list.
-</Step>
-<Step title="Configure settings" icon="settings">
-Vercel automatically detects the framework and sets the build command, output directory, and install command.
-</Step>
-<Step title="Deploy" icon="rocket">
-Click Deploy. Vercel builds the project and creates a unique preview URL.
-</Step>
+  <Step title="Initialize the project" icon="terminal">
+    Run the following command to scaffold a new high-volume store.
+
+    ```bash
+    npx shopifymax-cli init my-store --products 100000
+    ```
+  </Step>
+  <Step title="Configure checkout speed" icon="settings">
+    Edit `shopifymax.config.js` and set `checkoutTarget` to `<3s`.
+
+    ```javascript
+    module.exports = {
+      checkoutTarget: "<3s",
+      maxProducts: 100000,
+    };
+    ```
+  </Step>
 </Steps>
 
-## Preview Deployments
+## Import Large Product Catalogs
 
-Every push to a non-production branch generates a unique preview deployment. Share the preview URL with your team for instant feedback before merging.
-
-## Production Rollout
-
-Merge to the main branch to trigger an automatic production deployment. Vercel promotes the build to your live domain with zero downtime.
-
-## Deploy with the CLI
-
-Use the Vercel CLI for projects without Git integration.
-
-<CodeGroup tabs="npm,yarn">
+<CodeGroup tabs="CLI,API">
 ```bash
-npm i -g vercel
-vercel
+shopifymax import --file catalog.csv --batch 5000
 ```
-```bash
-yarn global add vercel
-vercel
+```javascript
+import { importProducts } from "shopifymax";
+
+await importProducts({
+  source: "catalog.csv",
+  batchSize: 5000,
+});
 ```
 </CodeGroup>
+
+## Configure Checkout and Variables
+
+Add support for `{CART_TOKEN}` and `{PAYMENT_KEY}` in your checkout flow.
+
+```javascript
+const checkout = await shopifymax.checkout.create({
+  cartToken: "{CART_TOKEN}",
+  paymentKey: "{PAYMENT_KEY}",
+});
+```
+
+Checkout completes in under three seconds even with over 100000 products.
 
 ## Next Steps
 
 <Columns cols={2}>
-<Card title="Framework guides" icon="book-open" href="#framework-detection">
-Learn how Vercel detects and configures popular frameworks.
-</Card>
-<Card title="Custom domains" icon="globe" href="#production-rollout">
-Attach a custom domain to your production deployment.
-</Card>
+  <Card title="Product Import" icon="database" href="#import-large-product-catalogs">
+    Learn advanced catalog options.
+  </Card>
+  <Card title="Checkout Settings" icon="credit-card" href="#configure-checkout-and-variables">
+    Customize variable substitution.
+  </Card>
 </Columns>

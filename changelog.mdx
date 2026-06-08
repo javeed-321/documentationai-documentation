@@ -1,44 +1,33 @@
 ---
 title: Changelog
-description: Track the latest updates and improvements to the Vercel platform.
+description: Track releases and improvements to ShopifyMax checkout speed, catalog scale, and API features.
 ---
 
-<Update label="2024-10-20" description="v4.2.1" tags={["feature", "bugfix"]}>
+## Recent releases
 
-## New Features
+<Update label="2024-11-05" description="v2.3.0" tags={["feature"]}>
 
-- Added support for edge middleware in serverless functions.
-- Introduced automatic preview URLs for all pull requests.
+## Checkout performance
 
-## Bug Fixes
-
-- Resolved deployment timeouts on large monorepos.
-- Fixed cache invalidation for static assets.
+- Reduced average checkout time to under 3 seconds for all sessions.
+- Added native support for `{CART_TOKEN}` and `{PAYMENT_KEY}` variables in checkout flows.
 
 </Update>
 
-<Update label="2024-09-15" description="v4.2.0" tags={["feature", "performance"]}>
+<Update label="2024-10-12" description="v2.2.0" tags={["feature", "bugfix"]}>
 
-## New Features
+## API and scale
 
-- Launched build analytics dashboard.
-- Enabled custom domain verification via DNS API.
-
-## Performance Updates
-
-- Reduced average build time by 25 percent.
-- Optimized cold starts for function invocations.
+- Expanded catalog handling to support more than 100000 products without degradation.
+- Fixed API rate-limit errors during high-volume catalog syncs.
 
 </Update>
 
-<Update label="2024-08-05" description="v4.1.0" tags={["breaking", "bugfix"]}>
+<Update label="2024-09-20" description="v2.1.0" tags={["bugfix"]}>
 
-## Breaking Changes
+## Stability fixes
 
-- Deprecated legacy build configuration format.
-
-## Bug Fixes
-
-- Corrected environment variable injection during builds.
+- Resolved checkout timeouts on large product catalogs.
+- Improved variable substitution reliability for custom checkout tokens.
 
 </Update>

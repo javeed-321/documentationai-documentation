@@ -1,42 +1,35 @@
 ---
 title: Roadmap
-description: >-
-  See upcoming features and planned improvements for the Vercel deployment
-  platform.
+description: See planned ShopifyMax developments for even faster checkouts and expanded variable capabilities.
 ---
-Vercel's public roadmap shows planned work on integrations, infrastructure, developer experience, and enterprise capabilities.
 
-<Board uid="6df8069c-e623-490f-abfd-a4ebde0163c2" title="Board">
-  <BoardColumn title="Planned" uid="2e938896-e726-490e-a6e9-5625d9e3e663">
-    <BoardCard title="GitHub Actions integration" uid="e1a394d6-7274-484b-ba38-ca082c4190cd" description="Add native support for triggering deployments directly from GitHub Actions workflows." />
+ShopifyMax continues to evolve with enhancements focused on speed, scale, and flexibility.
 
-    <BoardCard title="Edge network expansion" uid="f3b38f37-e752-47e0-a2ce-1f7d393f4803" description="Deploy additional edge locations in Asia-Pacific and South America regions." />
-
-    <BoardCard title="Enterprise SSO enhancements" uid="c6d71216-0145-4cec-9d03-2133c5c93937" description="Introduce SAML and SCIM provisioning for large organization identity management." />
+<Board>
+  <BoardColumn title="Backlog">
+    <BoardCard title="Sub-second edge checkout routing" description="Optimize checkout paths to reduce average time below one second." />
+    <BoardCard title="Support for 500000+ product catalogs" description="Expand catalog handling beyond current limits while maintaining performance." />
+    <BoardCard title="Add {USER_PREFERENCE} variable support" description="Introduce new variables for personalized checkout flows." />
+    <BoardCard title="Native ERP system integrations" description="Connect directly to major enterprise resource planning platforms." />
+    <BoardCard title="Advanced fraud detection module" description="Implement machine learning checks during the payment step." />
   </BoardColumn>
-
-  <BoardColumn title="In Progress" uid="42347d3f-975f-4b20-8953-f4b42070ada0">
-    <BoardCard title="CLI performance overhaul" uid="f149377d-f3fa-4aa7-95dd-619bcdcc6a7e" description="Rewrite core commands for faster local builds and deployment feedback." />
-
-    <BoardCard title="Serverless database connectors" uid="5d9fa27d-7c15-41e3-b06c-d78e72dd1691" description="Provide first-class connections to popular serverless Postgres and MySQL providers." />
-
-    <BoardCard title="Improved preview comments" uid="600b5201-c13f-41f1-bca1-033eca3ce4d4" description="Enable threaded discussions and notifications on preview deployment URLs." />
+  <BoardColumn title="Next Up">
+    <BoardCard title="Global CDN checkout acceleration" description="Deploy additional edge locations to cut latency worldwide." />
+    <BoardCard title="Bulk import for 250000 product catalogs" description="Improve tools for merchants managing very large inventories." />
+    <BoardCard title="Expand {CART_TOKEN} validation options" description="Allow custom rules for cart token handling in workflows." />
+    <BoardCard title="Payment gateway plugin framework" description="Enable third-party developers to build custom gateways." />
+    <BoardCard title="Real-time inventory sync API" description="Provide endpoints for live stock updates across channels." />
   </BoardColumn>
-
-  <BoardColumn title="Completed" uid="93a5a858-156f-4708-b47a-84811491c485">
-    <BoardCard title="Next.js 15 support" uid="42145abd-1304-4199-ac83-9e72d870e340" description="Roll out automatic optimization and caching for the latest Next.js release." author="Javeed Shaik" />
-
-    <BoardCard title="Untitled" uid="1c95a375-5e9f-4e05-b524-9ad8b6c7ac12" description="Roll out automatic optimization and caching for the latest Next.js release." author="Javeed Shaik" />
-
-    <BoardCard title="Untitled" uid="8f512931-3543-4f5f-be30-0263a7fe594e" description="Roll out automatic optimization and caching for the latest Next.js release." author="Javeed Shaik" />
+  <BoardColumn title="In Progress">
+    <BoardCard title="Memory-efficient checkout engine" description="Refactor core processing to achieve consistent sub-three-second times." />
+    <BoardCard title="Dynamic catalog scaling tests" description="Validate performance with product counts exceeding 100000." />
+    <BoardCard title="Introduce {PAYMENT_KEY} rotation feature" description="Add automated key rotation for enhanced security." />
+    <BoardCard title="Shopify App Store listing preparation" description="Finalize integration points for official marketplace availability." />
   </BoardColumn>
-
-  <BoardColumn title="In Progress" uid="6a907563-2112-4994-88b7-b541c574e427">
-    <BoardCard title="Next.js 15 support" uid="c092101f-71a3-4894-8ccf-18400b1803ee" description="Roll out automatic optimization and caching for the latest Next.js release." />
-
-    <BoardCard title="Team usage dashboards" uid="0f282c53-4db4-40db-905d-97374fecee31" description="Launch real-time analytics for bandwidth, builds, and function invocations." />
-
-    <BoardCard title="Custom domain automation" uid="f9786de6-52bb-4bd6-91f4-236322a378f1" description="Add one-click DNS configuration and certificate renewal for custom domains." />
+  <BoardColumn title="Done">
+    <BoardCard title="Initial checkout latency reduction" description="Achieved average checkout completion under three seconds." />
+    <BoardCard title="Catalog size increase to 100000 products" description="Successfully tested and released support for large inventories." />
+    <BoardCard title="Core {CART_TOKEN} and {PAYMENT_KEY} variables" description="Implemented foundational variable support in checkout logic." />
+    <BoardCard title="Basic payment gateway connections" description="Added support for major credit card and digital wallet providers." />
   </BoardColumn>
 </Board>
-

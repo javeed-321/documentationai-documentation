@@ -1,53 +1,71 @@
 ---
 title: Authentication
-description: Authenticate API requests with Vercel tokens and OAuth for secure access control.
+description: Authenticate requests to the ShopifyMax API using PAYMENT_KEY and CART_TOKEN credentials.
 ---
 
 ## Overview
 
-Vercel API requests require authentication via personal access tokens or OAuth 2.0. Every request must include a valid token in the `Authorization` header. Tokens grant access based on assigned scopes that control which resources the caller can read or modify.
+All requests to the ShopifyMax API require authentication. You pass credentials as HTTP headers. The platform accepts two variables: `PAYMENT_KEY` for payment operations and `CART_TOKEN` for cart sessions. Requests without valid credentials return HTTP 401.
 
-## Authentication Methods
+Use `https://api.example.com` as the base URL for all authenticated endpoints.
+
+## Authentication methods
 
 <Tabs>
-  <Tab title="Personal Access Tokens" icon="key">
-    Generate a personal access token from your account settings. These tokens authenticate as your user account and inherit your permissions.
+  <Tab title="PAYMENT_KEY" icon="key">
+    Send the `PAYMENT_KEY` header for payment and order endpoints. This key identifies your merchant account.
 
-    <ParamField header="Authorization" param-type="string" required="true">
-      Set the value to `Bearer ` followed by your token.
+    <ParamField header="PAYMENT_KEY" param-type="string" required="true">
+      Your merchant payment credential. Obtain it from the dashboard at `https://dashboard.example.com/keys`.
     </ParamField>
   </Tab>
-  <Tab title="OAuth Apps" icon="shield">
-    Register an OAuth application to obtain client credentials. Users authorize your app and receive short-lived access tokens.
+  <Tab title="CART_TOKEN" icon="lock">
+    Send the `CART_TOKEN` header when modifying carts or checking out. Tokens expire after 30 minutes of inactivity.
+
+    <ParamField header="CART_TOKEN" param-type="string" required="true">
+      Session token returned by the `/cart` endpoint. Use it to associate subsequent requests with an active cart.
+    </ParamField>
   </Tab>
 </Tabs>
 
-## Implementation
+## Implementation examples
 
-Use the token in requests across supported languages.
+<CodeGroup tabs="cURL,JavaScript,Python">
+```bash
+curl -X POST https://api.example.com/checkout \
+  -H "PAYMENT_KEY: pm_live_1234567890" \
+  -H "CART_TOKEN: ct_abcdef123456" \
+  -H "Content-Type: application/json" \
+  -d '{"items":[{"sku":"ABC","qty":1}]}'
+```
 
-<CodeGroup tabs="JavaScript,Python,cURL">
 ```javascript
-const res = await fetch('https://api.example.com/v1/deployments', {
+const response = await fetch("https://api.example.com/checkout", {
+  method: "POST",
   headers: {
-    Authorization: 'Bearer YOUR_TOKEN',
+    "PAYMENT_KEY": "pm_live_1234567890",
+    "CART_TOKEN": "ct_abcdef123456",
+    "Content-Type": "application/json",
   },
+  body: JSON.stringify({ items: [{ sku: "ABC", qty: 1 }] }),
 });
 ```
+
 ```python
 import requests
 
-headers = {'Authorization': 'Bearer YOUR_TOKEN'}
-response = requests.get('https://api.example.com/v1/deployments', headers=headers)
-```
-```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" \
-  https://api.example.com/v1/deployments
+headers = {
+    "PAYMENT_KEY": "pm_live_1234567890",
+    "CART_TOKEN": "ct_abcdef123456",
+    "Content-Type": "application/json",
+}
+data = {"items": [{"sku": "ABC", "qty": 1}]}
+response = requests.post("https://api.example.com/checkout", json=data, headers=headers)
 ```
 </CodeGroup>
 
-## Security Considerations
+## Security recommendations
 
 <Callout kind="alert">
-Rotate tokens every 90 days. Store tokens only in secure environment variables and never commit them to source control. Revoke compromised tokens immediately from your account dashboard.
+Never expose `PAYMENT_KEY` or `CART_TOKEN` in client-side code or public repositories. Rotate keys immediately if you suspect leakage. Always use HTTPS.
 </Callout>

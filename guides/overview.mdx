@@ -1,71 +1,69 @@
 ---
 title: Feature Overview
-description: Explore Vercel's core capabilities including previews, analytics, and edge middleware.
+description: Explore ShopifyMax capabilities including ultra-fast checkout flows and enterprise-scale product handling.
 ---
 
 ## Overview
 
-Vercel provides a modern deployment platform that helps you ship web applications quickly. You connect your Git repository, and Vercel handles builds, deployments, and hosting automatically. The platform emphasizes instant feedback through previews, detailed performance insights, and efficient execution at the edge.
+ShopifyMax powers high-volume stores with checkout flows that complete in under three seconds. The platform manages catalogs exceeding 100000 products while maintaining reliable performance. You configure cart and payment variables directly in your integration code to keep transactions secure and traceable.
 
-## Instant Previews
+## Checkout Speed Optimization
 
-Every push to your repository triggers a unique preview deployment. You share the preview URL with stakeholders to gather feedback before merging changes.
+You enable edge caching and pre-rendered payment forms to hit sub-three-second targets. ShopifyMax automatically compresses assets and prioritizes critical checkout scripts.
 
-<Card title="Preview Workflow" icon="git-branch" href="#examples">
-  View live changes without affecting production.
-</Card>
-
-## Performance Monitoring
-
-Vercel tracks Core Web Vitals and other metrics on every deployment. You review dashboards to identify slow resources and optimize load times.
-
-<Callout kind="info">
-  Analytics data updates in real time after each deployment.
+<Callout kind="tip">
+  Test your checkout page with real network conditions before launch.
 </Callout>
 
-## Edge Functions
+## Catalog Management
 
-Edge Functions run lightweight JavaScript close to users worldwide. You deploy functions that execute in milliseconds without managing servers.
+You organize products in hierarchical collections and apply bulk updates through the dashboard. The system indexes every item for instant search across storefronts.
+
+<Card title="Scale with confidence" icon="trending-up" href="#catalog-management">
+  Handle over 100000 products without slowdowns.
+</Card>
+
+## Cart Token Workflows
+
+You pass the `CART_TOKEN` variable at session start to track abandoned carts and restore sessions across devices.
 
 <Tabs>
   <Tab title="JavaScript" icon="code">
-    ```javascript
-    export default function handler(request) {
-      return new Response("Hello from the edge");
-    }
-    ```
+    Store the token in local storage for later retrieval.
   </Tab>
-  <Tab title="TypeScript" icon="code">
-    ```typescript
-    export default function handler(request: Request) {
-      return new Response("Hello from the edge");
-    }
-    ```
+  <Tab title="Python" icon="terminal">
+    Attach the token to every subsequent API call.
   </Tab>
 </Tabs>
 
-## Team Collaboration
+## Payment Key Handling
 
-Invite teammates to shared projects with role-based permissions. You comment directly on preview deployments and assign tasks through integrated notifications.
+You supply the `PAYMENT_KEY` variable when initializing the payment gateway. ShopifyMax validates the key on each transaction to prevent unauthorized charges.
 
 ## Examples
 
-<CodeGroup tabs="CLI,API">
-```bash
-vercel deploy --prod
+<CodeGroup tabs="JavaScript,Python">
+```javascript
+const cartToken = "your_cart_token_here";
+const paymentKey = "your_payment_key_here";
+fetch("https://api.example.com/checkout", {
+  headers: { "X-Cart-Token": cartToken, "X-Payment-Key": paymentKey }
+});
 ```
-```bash
-curl -X POST https://api.example.com/v1/deployments \
-  -H "Authorization: Bearer YOUR_TOKEN"
+```python
+cart_token = "your_cart_token_here"
+payment_key = "your_payment_key_here"
+requests.post("https://api.example.com/checkout", headers={
+    "X-Cart-Token": cart_token,
+    "X-Payment-Key": payment_key
+})
 ```
 </CodeGroup>
 
 ## Best Practices
 
-<Expandable title="Optimize Edge Functions" default-open="false">
-  Keep function code under 1 MB and minimize external dependencies for fastest cold starts.
+<Expandable title="Secure your keys" default-open="false">
+  Never expose `PAYMENT_KEY` in client-side bundles. Rotate keys quarterly through the dashboard.
 </Expandable>
 
-<Expandable title="Review Analytics Regularly" default-open="false">
-  Set weekly reminders to check performance reports and address regressions early.
-</Expandable>
+Store `CART_TOKEN` values server-side when possible. Monitor checkout latency in your analytics dashboard and adjust caching rules when average times exceed two seconds.

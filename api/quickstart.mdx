@@ -1,79 +1,89 @@
 ---
-title: Quickstart
-description: Make your first API calls to create deployments and retrieve project data on Vercel.
+title: API Quickstart
+description: Make your first ShopifyMax API calls to manage products and trigger optimized checkouts.
 ---
 
 ## Prerequisites
 
 <Callout kind="info">
-Obtain a personal access token from your account settings page. Export it as the `VERCEL_TOKEN` environment variable before running any requests.
+Obtain an API key from `https://dashboard.example.com`. The platform supports catalogs exceeding `100000` products and checkouts completing in under `3` seconds.
 </Callout>
 
-## Installation
+## Client Setup
 
 <Steps>
-<Step title="Install the client" icon="download">
-Run the following command to add the official client package.
+  <Step title="Install the package" icon="download">
+    Run the following command in your project directory.
 
-```bash
-npm install @vercel/client
-```
-</Step>
-<Step title="Authenticate" icon="key">
-Store your token so the client can read it automatically.
+    ```bash
+    npm install @shopifymax/api
+    ```
+  </Step>
+  <Step title="Configure credentials" icon="settings">
+    Set your API key as an environment variable.
 
-```bash
-export VERCEL_TOKEN=your_token_here
-```
-</Step>
+    ```bash
+    export SHOPIFYMAX_API_KEY=your_key_here
+    ```
+  </Step>
 </Steps>
 
-## Create a deployment
+## Minimal Working Example
 
-Use the client to push a new deployment from a local directory.
-
-<CodeGroup tabs="JavaScript,cURL">
+<CodeGroup tabs="JavaScript,Python">
 ```javascript
-import { createDeployment } from '@vercel/client';
+import { ShopifyMaxClient } from '@shopifymax/api';
 
-const deployment = await createDeployment({
-  token: process.env.VERCEL_TOKEN,
-  path: './my-app',
-  projectName: 'example-project',
+const client = new ShopifyMaxClient({ apiKey: process.env.SHOPIFYMAX_API_KEY });
+
+const product = await client.products.create({
+  title: 'Wireless Headphones',
+  price: 99.99,
+  inventory: 500,
 });
 
-console.log(deployment.id);
+const checkout = await client.checkouts.create({
+  cartToken: '{CART_TOKEN}',
+  paymentKey: '{PAYMENT_KEY}',
+  productId: product.id,
+});
+
+console.log('Checkout completed in under 3 seconds:', checkout.id);
 ```
 
-```bash
-curl -X POST https://api.example.com/v2/deployments \
-  -H "Authorization: Bearer $VERCEL_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"name":"example-project","files":[]}'
+```python
+from shopifymax import ShopifyMaxClient
+import os
+
+client = ShopifyMaxClient(api_key=os.environ['SHOPIFYMAX_API_KEY'])
+
+product = client.products.create({
+    'title': 'Wireless Headphones',
+    'price': 99.99,
+    'inventory': 500,
+})
+
+checkout = client.checkouts.create({
+    'cart_token': '{CART_TOKEN}',
+    'payment_key': '{PAYMENT_KEY}',
+    'product_id': product['id'],
+})
+
+print('Checkout completed in under 3 seconds:', checkout['id'])
 ```
 </CodeGroup>
 
-## List projects
+## Variable Usage
 
-Retrieve all projects associated with your account.
+Pass `{CART_TOKEN}` and `{PAYMENT_KEY}` directly in checkout payloads. These tokens enable the sub-3-second checkout path while the platform handles catalogs larger than `100000` products.
 
-```javascript
-const res = await fetch('https://api.example.com/v2/projects', {
-  headers: { Authorization: `Bearer ${process.env.VERCEL_TOKEN}` },
-});
-const { projects } = await res.json();
-console.log(projects);
-```
-
-## Handle responses
-
-Every successful response returns a JSON object with an `id` field. Check the `status` field on error responses to determine the next action.
+## Next Steps
 
 <Columns cols={2}>
-<Card title="Deployments reference" href="#creating-a-deployment" icon="arrow-right">
-View all deployment endpoints and options.
-</Card>
-<Card title="Projects reference" href="#list-projects" icon="arrow-right">
-See every available project operation.
-</Card>
+  <Card title="Product Management" href="#product-requests">
+    Explore create, update, and list operations.
+  </Card>
+  <Card title="Checkout API" href="#checkout-examples">
+    Review advanced checkout flows and webhooks.
+  </Card>
 </Columns>
