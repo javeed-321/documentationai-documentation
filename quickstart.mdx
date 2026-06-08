@@ -1,72 +1,56 @@
 ---
-title: Quickstart Guide
-description: Set up ShopifyMax and launch your first high-volume store with optimized checkout in minutes.
+title: Quickstart
+description: Step-by-step guide to launching your first ShopifyMax store and configuring fast checkout.
 ---
 
 ## Prerequisites
 
 <Callout kind="info">
-Before you begin, create a free account at `https://dashboard.example.com` and obtain your store API key. You need Node.js 18 or later installed.
+Sign up at `https://dashboard.example.com` and create an API key before you start. You need a store plan that supports more than 100000 products.
 </Callout>
 
-## Create Your Store
+## Create and Launch Your Store
 
 <Steps>
-  <Step title="Initialize the project" icon="terminal">
-    Run the following command to scaffold a new high-volume store.
-
-    ```bash
-    npx shopifymax-cli init my-store --products 100000
-    ```
-  </Step>
-  <Step title="Configure checkout speed" icon="settings">
-    Edit `shopifymax.config.js` and set `checkoutTarget` to `<3s`.
-
-    ```javascript
-    module.exports = {
-      checkoutTarget: "<3s",
-      maxProducts: 100000,
-    };
-    ```
-  </Step>
+<Step title="Create your store" icon="plus-circle">
+Go to `https://dashboard.example.com/stores` and select Create Store. Name the store and choose your region.
+</Step>
+<Step title="Install a theme" icon="download">
+From the dashboard, browse themes and click Install on a performance-optimized template. The process completes in under two minutes.
+</Step>
+<Step title="Enable fast checkout" icon="zap">
+Toggle Sub-3-Second Checkout in the store settings. ShopifyMax activates edge caching automatically.
+</Step>
 </Steps>
 
-## Import Large Product Catalogs
+## Configure Required Variables
 
-<CodeGroup tabs="CLI,API">
+Add the following keys in the Environment Variables section of your store dashboard.
+
+<CodeGroup tabs="Dashboard,CLI">
 ```bash
-shopifymax import --file catalog.csv --batch 5000
+shopifymax config set CART_TOKEN your_cart_token_here
+shopifymax config set PAYMENT_KEY your_payment_key_here
 ```
-```javascript
-import { importProducts } from "shopifymax";
-
-await importProducts({
-  source: "catalog.csv",
-  batchSize: 5000,
-});
+```json
+{
+  "CART_TOKEN": "your_cart_token_here",
+  "PAYMENT_KEY": "your_payment_key_here"
+}
 ```
 </CodeGroup>
 
-## Configure Checkout and Variables
+## Verify Your Setup
 
-Add support for `{CART_TOKEN}` and `{PAYMENT_KEY}` in your checkout flow.
-
-```javascript
-const checkout = await shopifymax.checkout.create({
-  cartToken: "{CART_TOKEN}",
-  paymentKey: "{PAYMENT_KEY}",
-});
-```
-
-Checkout completes in under three seconds even with over 100000 products.
+Open your store URL in an incognito window and add a test product to the cart. Checkout should finish in less than three seconds.
 
 ## Next Steps
 
 <Columns cols={2}>
-  <Card title="Product Import" icon="database" href="#import-large-product-catalogs">
-    Learn advanced catalog options.
-  </Card>
-  <Card title="Checkout Settings" icon="credit-card" href="#configure-checkout-and-variables">
-    Customize variable substitution.
-  </Card>
+<Card title="Theme Customization" href="#theme-customization" icon="palette">
+Adjust layouts and add custom components for your catalog.
+</Card>
+<Card title="Advanced Checkout Rules" href="#advanced-checkout" icon="shield">
+Set product limits and regional payment methods.
+</Card>
 </Columns>

@@ -1,33 +1,31 @@
 ---
 title: Changelog
-description: Track releases and improvements to ShopifyMax checkout speed, catalog scale, and API features.
+description: Release notes detailing new features, performance improvements, and API changes for ShopifyMax.
 ---
 
-## Recent releases
+<Update label="2024-11-05" description="v2.1.0" tags={["feature"]}>
 
-<Update label="2024-11-05" description="v2.3.0" tags={["feature"]}>
+## Checkout and variables
 
-## Checkout performance
-
-- Reduced average checkout time to under 3 seconds for all sessions.
-- Added native support for `{CART_TOKEN}` and `{PAYMENT_KEY}` variables in checkout flows.
+- Reduced average checkout time to under 3 seconds through optimized payment routing.
+- Added native support for `CART_TOKEN` and `PAYMENT_KEY` variables in checkout flows.
 
 </Update>
 
-<Update label="2024-10-12" description="v2.2.0" tags={["feature", "bugfix"]}>
+<Update label="2024-10-12" description="v2.0.0" tags={["feature"]}>
 
-## API and scale
+## Catalog scalability
 
-- Expanded catalog handling to support more than 100000 products without degradation.
-- Fixed API rate-limit errors during high-volume catalog syncs.
+- Extended product catalog support to handle more than 100000 items with improved indexing.
+- Introduced parallel loading for large inventories during search and browse operations.
 
 </Update>
 
-<Update label="2024-09-20" description="v2.1.0" tags={["bugfix"]}>
+<Update label="2024-09-28" description="v1.9.5" tags={["bugfix"]}>
 
-## Stability fixes
+## Performance fixes
 
-- Resolved checkout timeouts on large product catalogs.
-- Improved variable substitution reliability for custom checkout tokens.
+- Resolved timeout errors on high-volume catalog queries exceeding 100000 products.
+- Fixed variable substitution failures that affected custom checkout tokens.
 
 </Update>

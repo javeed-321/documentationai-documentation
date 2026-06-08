@@ -1,69 +1,80 @@
 ---
 title: Feature Overview
-description: Explore ShopifyMax capabilities including ultra-fast checkout flows and enterprise-scale product handling.
+description: Detailed look at ShopifyMax features including high-volume catalog management and optimized payment flows.
 ---
 
 ## Overview
 
-ShopifyMax powers high-volume stores with checkout flows that complete in under three seconds. The platform manages catalogs exceeding 100000 products while maintaining reliable performance. You configure cart and payment variables directly in your integration code to keep transactions secure and traceable.
+ShopifyMax delivers reliable performance for stores that scale. You handle catalogs exceeding 100000 products while maintaining checkout times under three seconds. The platform supports the `CART_TOKEN` and `PAYMENT_KEY` variables so you can customize cart behavior and payment routing without custom code.
 
-## Checkout Speed Optimization
+## Managing Large Product Catalogs
 
-You enable edge caching and pre-rendered payment forms to hit sub-three-second targets. ShopifyMax automatically compresses assets and prioritizes critical checkout scripts.
+You organize and update catalogs that contain more than 100000 products. ShopifyMax indexes products in real time and provides search, filtering, and bulk edit tools that stay responsive.
+
+<Columns cols={2}>
+  <Card title="Bulk Import" icon="upload" href="#examples">
+    Upload CSV or JSON files with automatic validation.
+  </Card>
+  <Card title="Live Sync" icon="refresh-cw" href="#examples">
+    Connect external systems and keep inventory current.
+  </Card>
+</Columns>
+
+## Optimizing Checkout Speed
+
+Checkout completes in less than three seconds even at peak traffic. The platform preloads payment forms, caches product data, and routes requests through a global edge network.
 
 <Callout kind="tip">
-  Test your checkout page with real network conditions before launch.
+  Enable edge caching on product pages to reduce latency by an additional 40 percent.
 </Callout>
 
-## Catalog Management
+## Customizing with Variables
 
-You organize products in hierarchical collections and apply bulk updates through the dashboard. The system indexes every item for instant search across storefronts.
-
-<Card title="Scale with confidence" icon="trending-up" href="#catalog-management">
-  Handle over 100000 products without slowdowns.
-</Card>
-
-## Cart Token Workflows
-
-You pass the `CART_TOKEN` variable at session start to track abandoned carts and restore sessions across devices.
+You inject the `CART_TOKEN` and `PAYMENT_KEY` variables into checkout flows to control discounts, shipping rules, and payment method selection.
 
 <Tabs>
   <Tab title="JavaScript" icon="code">
-    Store the token in local storage for later retrieval.
+    ```javascript
+    const cart = await shopifyMax.getCart({
+      token: CART_TOKEN,
+      paymentKey: PAYMENT_KEY,
+    });
+    ```
   </Tab>
-  <Tab title="Python" icon="terminal">
-    Attach the token to every subsequent API call.
+  <Tab title="cURL" icon="terminal">
+    ```bash
+    curl -X POST https://api.example.com/cart \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -d '{"token":"CART_TOKEN","payment_key":"PAYMENT_KEY"}'
+    ```
   </Tab>
 </Tabs>
 
-## Payment Key Handling
-
-You supply the `PAYMENT_KEY` variable when initializing the payment gateway. ShopifyMax validates the key on each transaction to prevent unauthorized charges.
-
 ## Examples
 
-<CodeGroup tabs="JavaScript,Python">
+<CodeGroup tabs="Node.js,Python">
 ```javascript
-const cartToken = "your_cart_token_here";
-const paymentKey = "your_payment_key_here";
-fetch("https://api.example.com/checkout", {
-  headers: { "X-Cart-Token": cartToken, "X-Payment-Key": paymentKey }
-});
+import { ShopifyMax } from "shopifymax";
+
+const client = new ShopifyMax({ apiKey: "YOUR_API_KEY" });
+const catalog = await client.catalogs.import("products.json");
 ```
 ```python
-cart_token = "your_cart_token_here"
-payment_key = "your_payment_key_here"
-requests.post("https://api.example.com/checkout", headers={
-    "X-Cart-Token": cart_token,
-    "X-Payment-Key": payment_key
-})
+from shopifymax import Client
+
+client = Client(api_key="YOUR_API_KEY")
+catalog = client.catalogs.import("products.json")
 ```
 </CodeGroup>
 
 ## Best Practices
 
-<Expandable title="Secure your keys" default-open="false">
-  Never expose `PAYMENT_KEY` in client-side bundles. Rotate keys quarterly through the dashboard.
-</Expandable>
+- Test variable substitutions in a staging environment before you promote changes.
+- Monitor checkout duration with built-in analytics and set alerts when average time exceeds two seconds.
+- Keep product images under 500 KB to preserve the sub-three-second checkout guarantee.
 
-Store `CART_TOKEN` values server-side when possible. Monitor checkout latency in your analytics dashboard and adjust caching rules when average times exceed two seconds.
+<Expandable title="Advanced variable usage" default-open="false">
+
+You can combine `CART_TOKEN` with custom metadata to apply region-specific pricing rules. Store the resulting values in your `PAYMENT_KEY` configuration so payment providers receive the correct routing data on every transaction.
+
+</Expandable>

@@ -15,12 +15,12 @@
     "fixture-import"
   ],
   "passed": true,
-  "durationMs": 39724,
+  "durationMs": 63000,
   "totalFiles": 11,
   "validFiles": 11,
   "failedFiles": [],
   "totalAttempts": 11,
-  "tokens": 92731,
+  "tokens": 94829,
   "files": [
     "introduction.mdx",
     "quickstart.mdx",

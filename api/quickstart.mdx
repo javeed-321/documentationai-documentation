@@ -1,89 +1,87 @@
 ---
-title: API Quickstart
-description: Make your first ShopifyMax API calls to manage products and trigger optimized checkouts.
+title: Quickstart
+description: Quick guide to making your first API calls for product sync and checkout initiation.
 ---
 
 ## Prerequisites
 
 <Callout kind="info">
-Obtain an API key from `https://dashboard.example.com`. The platform supports catalogs exceeding `100000` products and checkouts completing in under `3` seconds.
+Install Node.js 18 or later. Obtain an API key from the dashboard at https://dashboard.example.com. The platform supports catalogs exceeding 100000 products and checkouts completing in under 3 seconds.
 </Callout>
 
-## Client Setup
+## Setup
 
 <Steps>
-  <Step title="Install the package" icon="download">
-    Run the following command in your project directory.
-
-    ```bash
-    npm install @shopifymax/api
-    ```
+  <Step title="Install the HTTP client" icon="download">
+    Add a minimal client for API requests.
   </Step>
   <Step title="Configure credentials" icon="settings">
-    Set your API key as an environment variable.
-
-    ```bash
-    export SHOPIFYMAX_API_KEY=your_key_here
-    ```
+    Set your API key and base URL to https://api.example.com.
   </Step>
 </Steps>
 
-## Minimal Working Example
+## First API Calls
 
-<CodeGroup tabs="JavaScript,Python">
-```javascript
-import { ShopifyMaxClient } from '@shopifymax/api';
+Use the following example to sync a large catalog and initiate a checkout. The platform substitutes variables such as `CART_TOKEN` and `PAYMENT_KEY` in requests.
 
-const client = new ShopifyMaxClient({ apiKey: process.env.SHOPIFYMAX_API_KEY });
+<CodeGroup tabs="cURL,JavaScript">
+```bash
+curl -X POST https://api.example.com/catalog/sync \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "products": [{"id": "p1", "title": "Example Product"}],
+    "count": 100000
+  }'
 
-const product = await client.products.create({
-  title: 'Wireless Headphones',
-  price: 99.99,
-  inventory: 500,
-});
-
-const checkout = await client.checkouts.create({
-  cartToken: '{CART_TOKEN}',
-  paymentKey: '{PAYMENT_KEY}',
-  productId: product.id,
-});
-
-console.log('Checkout completed in under 3 seconds:', checkout.id);
+curl -X POST https://api.example.com/checkout/initiate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cart_token": "CART_TOKEN",
+    "payment_key": "PAYMENT_KEY"
+  }'
 ```
+```javascript
+const syncCatalog = async () => {
+  const res = await fetch('https://api.example.com/catalog/sync', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      products: [{ id: 'p1', title: 'Example Product' }],
+      count: 100000
+    })
+  });
+  return res.json();
+};
 
-```python
-from shopifymax import ShopifyMaxClient
-import os
-
-client = ShopifyMaxClient(api_key=os.environ['SHOPIFYMAX_API_KEY'])
-
-product = client.products.create({
-    'title': 'Wireless Headphones',
-    'price': 99.99,
-    'inventory': 500,
-})
-
-checkout = client.checkouts.create({
-    'cart_token': '{CART_TOKEN}',
-    'payment_key': '{PAYMENT_KEY}',
-    'product_id': product['id'],
-})
-
-print('Checkout completed in under 3 seconds:', checkout['id'])
+const initiateCheckout = async () => {
+  const res = await fetch('https://api.example.com/checkout/initiate', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      cart_token: 'CART_TOKEN',
+      payment_key: 'PAYMENT_KEY'
+    })
+  });
+  return res.json();
+};
 ```
 </CodeGroup>
-
-## Variable Usage
-
-Pass `{CART_TOKEN}` and `{PAYMENT_KEY}` directly in checkout payloads. These tokens enable the sub-3-second checkout path while the platform handles catalogs larger than `100000` products.
 
 ## Next Steps
 
 <Columns cols={2}>
-  <Card title="Product Management" href="#product-requests">
-    Explore create, update, and list operations.
+  <Card title="Catalog Management" href="#catalog-sync">
+    Learn how to update catalogs exceeding 100000 products.
   </Card>
-  <Card title="Checkout API" href="#checkout-examples">
-    Review advanced checkout flows and webhooks.
+  <Card title="Checkout API" href="#checkout">
+    Explore variable substitution for fast checkouts.
   </Card>
 </Columns>

@@ -1,135 +1,75 @@
 ---
 title: Error Codes
-description: Resolve common ShopifyMax API errors related to checkout failures, cart tokens, and payment keys.
+description: Common ShopifyMax API error codes related to checkout failures, payment processing, and catalog limits.
 ---
 
-## Overview
+## Payment and Checkout Errors
 
-ShopifyMax returns structured error responses for checkout operations. Every error includes a `code` field and a `message` that references the affected `{CART_TOKEN}` or `{PAYMENT_KEY}`.
+Use the following expandable sections to diagnose checkout and payment failures. Each section shows the exact error returned by the ShopifyMax API.
 
-<Callout kind="info">
-Include the exact `{CART_TOKEN}` value from the failing request when contacting support.
-</Callout>
+<Expandable title="Checkout declined: CART_TOKEN unresolved" default-open="false">
 
-## Checkout Decline Codes
+Problem: The checkout request returns `{"error":"CART_TOKEN unresolved","code":"CHK-401"}`.
 
-<Expandable title="Error: CHECKOUT_DECLINED" default-open="false">
+Cause: The request body references the `CART_TOKEN` variable but the token was never supplied or has expired.
 
-**Problem**
+Fix: Include a valid cart token in the request:
 
 ```json
 {
-  "error": "CHECKOUT_DECLINED",
-  "message": "Checkout declined for cart token cart_9k2pL4mX"
+  "cart_token": "YOUR_CART_TOKEN",
+  "payment_key": "YOUR_PAYMENT_KEY"
 }
 ```
 
-**Cause**
+</Expandable>
 
-The payment processor rejected the transaction after the cart contained more than 100000 products or the total exceeded the merchant limit.
+<Expandable title="Payment processing failed: PAYMENT_KEY invalid" default-open="false">
 
-**Fix**
+Problem: The API responds with `{"error":"PAYMENT_KEY invalid","code":"PAY-402"}` and aborts the transaction.
 
-Split the cart into smaller batches under 50000 products each and retry with the same `{CART_TOKEN}`.
+Cause: The supplied `PAYMENT_KEY` does not match any active key for the merchant account.
+
+Fix: Verify the key in the ShopifyMax dashboard and resend the request with the correct value:
 
 ```bash
-curl -X POST https://api.example.com/v1/checkout \
+curl -X POST https://api.example.com/checkout \
   -H "Authorization: Bearer YOUR_API_KEY" \
-  -d '{"cart_token":"cart_9k2pL4mX","split":true}'
+  -d '{"payment_key":"YOUR_PAYMENT_KEY"}'
 ```
 
 </Expandable>
 
-<Expandable title="Error: CHECKOUT_TIMEOUT" default-open="false">
+## Catalog and Rate Limit Errors
 
-**Problem**
+<Expandable title="Catalog size exceeded" default-open="false">
 
-```json
-{
-  "error": "CHECKOUT_TIMEOUT",
-  "message": "Checkout exceeded 3s limit"
-}
-```
+Problem: Bulk import fails with `{"error":"Catalog exceeds 100000 products","code":"CAT-503"}`.
 
-**Cause**
+Cause: The product feed contains more than the supported limit of 100000 items.
 
-Network latency or an oversized payload prevented completion within the required window.
-
-**Fix**
-
-Reduce payload size and ensure the request originates from a region with sub-100 ms latency to `api.example.com`.
+Fix: Split the catalog into multiple feeds under 100000 products each and import sequentially.
 
 </Expandable>
 
-## CART_TOKEN Errors
+<Expandable title="Rate limit exceeded" default-open="false">
 
-<Expandable title="Error: INVALID_CART_TOKEN" default-open="false">
+Problem: Requests return HTTP 429 with body `{"error":"Rate limit exceeded","code":"LIM-429"}`.
 
-**Problem**
+Cause: More than the allowed number of checkout or catalog requests were sent in the current window.
 
-```json
-{
-  "error": "INVALID_CART_TOKEN",
-  "message": "cart_9k2pL4mX is expired or malformed"
-}
-```
-
-**Cause**
-
-The token was generated more than 30 minutes ago or contains invalid characters.
-
-**Fix**
-
-Generate a fresh token and re-add items before attempting checkout again.
-
-```javascript
-const token = await shopifyMax.carts.create();
-```
+Fix: Implement exponential backoff and respect the `Retry-After` header returned in the response.
 
 </Expandable>
 
-## PAYMENT_KEY Failures
+## Variable Resolution Failures
 
-<Expandable title="Error: INVALID_PAYMENT_KEY" default-open="false">
+<Expandable title="Variable resolution failure" default-open="false">
 
-**Problem**
+Problem: The API logs `{"error":"Failed to resolve CART_TOKEN or PAYMENT_KEY","code":"VAR-400"}`.
 
-```json
-{
-  "error": "INVALID_PAYMENT_KEY",
-  "message": "Payment key pk_live_abc123 rejected"
-}
-```
+Cause: One or both variables are missing from the request payload or contain malformed values.
 
-**Cause**
-
-The `{PAYMENT_KEY}` is either revoked, scoped to the wrong merchant, or used after its 24-hour rotation window.
-
-**Fix**
-
-Rotate the key in the dashboard and update the environment variable before the next request.
-
-</Expandable>
-
-## Rate Limit Handling
-
-<Expandable title="Error: RATE_LIMIT_EXCEEDED" default-open="false">
-
-**Problem**
-
-HTTP 429 response with header `Retry-After: 60`.
-
-**Cause**
-
-More than 1000 requests per minute were sent using the same `{CART_TOKEN}`.
-
-**Fix**
-
-Implement exponential backoff starting at 1 second and respect the `Retry-After` value.
-
-```python
-import time
-time.sleep(int(response.headers["Retry-After"]))
-```
+Fix: Always provide both variables in every checkout call and validate their format before submission.
 
 </Expandable>

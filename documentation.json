@@ -24,11 +24,11 @@
             "expandable": false,
             "pages": [
               {
-                "title": "Introduction to ShopifyMax",
+                "title": "Introduction",
                 "path": "introduction"
               },
               {
-                "title": "Quickstart Guide",
+                "title": "Quickstart",
                 "path": "quickstart"
               }
             ]
@@ -56,31 +56,24 @@
             "expandable": false,
             "pages": [
               {
-                "title": "API Introduction",
+                "title": "Introduction",
                 "path": "api/introduction"
               },
               {
-                "title": "API Quickstart",
+                "title": "Quickstart",
                 "path": "api/quickstart"
               }
             ]
           },
           {
-            "group": "Authentication",
-            "icon": "folder",
+            "group": "Reference",
+            "icon": "code",
             "expandable": false,
             "pages": [
               {
                 "title": "Authentication",
                 "path": "api/authentication"
-              }
-            ]
-          },
-          {
-            "group": "Troubleshooting",
-            "icon": "alert-triangle",
-            "expandable": false,
-            "pages": [
+              },
               {
                 "title": "Error Codes",
                 "path": "api/errors"
